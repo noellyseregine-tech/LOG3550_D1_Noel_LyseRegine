@@ -119,3 +119,20 @@ button:disabled { background: #e3e7ee; border-color: #e3e7ee; color: #7b8597; cu
 
 footer { padding: var(--esp-2); text-align: center; background: var(--encre); color: var(--blanc); font-size: 0.9rem; }
 footer p { margin: 0; }
+
+/* Tablette : deux colonnes */
+@media (min-width: 600px) {
+  .controles { grid-template-columns: repeat(2, 1fr); align-items: end; }
+  form { max-width: 36rem; }
+  .grille { grid-template-columns: repeat(2, 1fr); }
+  header { flex-direction: row; justify-content: space-between; align-items: center; padding: var(--esp-2) var(--esp-3); }
+}
+
+/* Ordinateur : trois colonnes ou plus */
+@media (min-width: 960px) {
+  .controles { grid-template-columns: 2fr 1fr 1fr auto auto; }
+  .grille { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1280px) {
+  .grille { grid-template-columns: repeat(4, 1fr); }
+}

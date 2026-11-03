@@ -1,0 +1,121 @@
+/* Variables : couleurs et espacements */
+:root {
+  --encre: #14233c;
+  --papier: #f4f6f9;
+  --blanc: #ffffff;
+  --texte: #1c2433;
+  --texte-doux: #4a566b;
+  --bordure: #c9d1de;
+  --accent: #0b6b63;
+  --accent-fonce: #084c46;
+  --danger: #a3261f;
+  --dispo-fond: #d7f0e4;
+  --dispo-texte: #0b4a33;
+  --emprunte-fond: #fbe3d2;
+  --emprunte-texte: #7a2e0a;
+  --focus: #e0a100;
+  --esp-1: 0.5rem;
+  --esp-2: 1rem;
+  --esp-3: 1.5rem;
+  --esp-4: 2.5rem;
+  --rayon: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: var(--texte);
+  background: var(--papier);
+}
+
+h1, h2, h3 { font-family: "Literata", Georgia, serif; line-height: 1.2; margin: 0; }
+
+/* Lien d'évitement, visible au focus clavier */
+.skip { position: absolute; left: -999px; background: var(--blanc); padding: var(--esp-1) var(--esp-2); }
+.skip:focus { left: var(--esp-1); top: var(--esp-1); z-index: 10; }
+
+header {
+  background: var(--encre);
+  color: var(--blanc);
+  padding: var(--esp-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+}
+header h1 { font-size: 1.5rem; }
+nav { display: flex; gap: var(--esp-2); }
+nav a { color: var(--blanc); text-underline-offset: 4px; }
+
+main { padding: var(--esp-2); max-width: 72rem; margin: 0 auto; }
+section { margin-bottom: var(--esp-4); }
+section h2 { margin-bottom: var(--esp-2); font-size: 1.4rem; }
+
+/* Champs et boutons */
+.controles, form { display: grid; gap: var(--esp-2); }
+.champ { display: flex; flex-direction: column; gap: 0.25rem; }
+.champ.case { flex-direction: row; align-items: center; gap: var(--esp-1); }
+label { font-weight: 600; font-size: 0.95rem; }
+
+input[type="search"], input[type="text"], input[type="number"], select {
+  font: inherit;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  background: var(--blanc);
+  color: var(--texte);
+}
+input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--danger); border-width: 2px; }
+.erreur { margin: 0; min-height: 1.2em; color: var(--danger); font-size: 0.9rem; }
+
+button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--accent);
+  border-radius: var(--rayon);
+  background: var(--accent);
+  color: var(--blanc);
+  cursor: pointer;
+}
+button:hover { background: var(--accent-fonce); border-color: var(--accent-fonce); }
+button.secondaire { background: var(--blanc); color: var(--accent); }
+button.secondaire:hover { background: var(--dispo-fond); }
+button.danger { background: var(--blanc); color: var(--danger); border-color: var(--danger); }
+button.danger:hover { background: var(--danger); color: var(--blanc); }
+button:disabled { background: #e3e7ee; border-color: #e3e7ee; color: #7b8597; cursor: not-allowed; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+#compteur { color: var(--texte-doux); font-weight: 600; }
+#vide { padding: var(--esp-3); background: var(--blanc); border: 1px dashed var(--bordure); border-radius: var(--rayon); }
+
+/* Grille : une colonne par défaut (mobile d'abord) */
+.grille { display: grid; grid-template-columns: 1fr; gap: var(--esp-2); }
+
+.carte {
+  position: relative;
+  background: var(--blanc);
+  border: 1px solid var(--bordure);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--rayon);
+  padding: var(--esp-2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.carte:hover { border-color: var(--encre); box-shadow: 0 2px 8px rgba(20, 35, 60, 0.15); }
+.carte.emprunte { border-left-color: #c2531b; }
+.carte-titre { font-size: 1.1rem; }
+.carte-auteur { margin: 0; font-weight: 600; }
+.carte-meta { margin: 0; color: var(--texte-doux); font-size: 0.9rem; }
+.carte-actions { display: flex; gap: var(--esp-1); margin-top: auto; padding-top: var(--esp-1); flex-wrap: wrap; }
+
+.etiquette { align-self: flex-start; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+.etiquette.disponible { background: var(--dispo-fond); color: var(--dispo-texte); }
+.etiquette.emprunte { background: var(--emprunte-fond); color: var(--emprunte-texte); }
+
+footer { padding: var(--esp-2); text-align: center; background: var(--encre); color: var(--blanc); font-size: 0.9rem; }
+footer p { margin: 0; }

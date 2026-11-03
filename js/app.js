@@ -1,3 +1,4 @@
+const CHAMPS_FORMULAIRE = ["titre", "auteur", "annee", "categorie"];
 const $ = (id) => document.getElementById(id);
 
 let livres = copieDepart();
@@ -83,6 +84,57 @@ function supprimerLivre(id) {
   mettreAJour(livres.filter((l) => l.id !== id));
 }
 
+/* ---------- Formulaire ---------- */
+
+// Retourne un objet { champ: message } ; vide si tout est valide
+function validerFormulaire(valeurs) {
+  const erreurs = {};
+  const anneeCourante = new Date().getFullYear();
+  const annee = Number(valeurs.annee);
+
+  if (valeurs.titre.length < 2) erreurs.titre = "Le titre est obligatoire (2 caractères minimum).";
+  if (valeurs.auteur.length < 2) erreurs.auteur = "L'auteur est obligatoire (2 caractères minimum).";
+  if (valeurs.annee === "" || !Number.isInteger(annee) || annee < 1450 || annee > anneeCourante) {
+    erreurs.annee = `L'année doit être un nombre entier entre 1450 et ${anneeCourante}.`;
+  }
+  if (!CATEGORIES.includes(valeurs.categorie)) erreurs.categorie = "Choisissez une catégorie.";
+  return erreurs;
+}
+
+function afficherErreurs(erreurs) {
+  CHAMPS_FORMULAIRE.forEach((champ) => {
+    $(`erreur-${champ}`).textContent = erreurs[champ] || "";
+    $(champ).setAttribute("aria-invalid", champ in erreurs);
+  });
+}
+
+function lireFormulaire() {
+  return {
+    titre: $("titre").value.trim(),
+    auteur: $("auteur").value.trim(),
+    annee: $("annee").value.trim(),
+    categorie: $("categorie").value
+  };
+}
+
+function ajouterLivre(evenement) {
+  evenement.preventDefault();
+  const valeurs = lireFormulaire();
+  const erreurs = validerFormulaire(valeurs);
+  afficherErreurs(erreurs);
+
+  const premierChampInvalide = CHAMPS_FORMULAIRE.find((champ) => champ in erreurs);
+  if (premierChampInvalide) {
+    $(premierChampInvalide).focus();
+    return;
+  }
+
+  const nouvelId = Math.max(0, ...livres.map((l) => l.id)) + 1;
+  mettreAJour([...livres, { id: nouvelId, ...valeurs, annee: Number(valeurs.annee), disponible: true }]);
+  $("form-ajout").reset();
+  $("titre").focus();
+}
+
 /* ---------- Initialisation ---------- */
 
 function remplirCategories() {
@@ -93,9 +145,11 @@ function remplirCategories() {
 
 function init() {
   remplirCategories();
+  $("annee").max = new Date().getFullYear();
   ["recherche", "filtre-categorie", "tri", "dispo-seulement"].forEach((id) => {
     $(id).addEventListener("input", afficher);
   });
+  $("form-ajout").addEventListener("submit", ajouterLivre);
   afficher();
 }
 

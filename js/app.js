@@ -43,7 +43,14 @@ function creerCarte(livre) {
   carte.querySelector(".carte-titre").textContent = livre.titre;
   carte.querySelector(".carte-auteur").textContent = livre.auteur;
   carte.querySelector(".carte-meta").textContent = `${livre.annee} · ${livre.categorie}`;
-  carte.querySelector(".btn-statut").textContent = livre.disponible ? "Marquer emprunté" : "Marquer disponible";
+
+  const boutonStatut = carte.querySelector(".btn-statut");
+  boutonStatut.textContent = livre.disponible ? "Marquer emprunté" : "Marquer disponible";
+  boutonStatut.addEventListener("click", () => basculerStatut(livre.id));
+
+  const boutonSupprimer = carte.querySelector(".btn-supprimer");
+  boutonSupprimer.setAttribute("aria-label", `Supprimer « ${livre.titre} »`);
+  boutonSupprimer.addEventListener("click", () => supprimerLivre(livre.id));
   return carte;
 }
 
@@ -56,6 +63,24 @@ function afficher() {
   $("grille").replaceChildren(...resultats.map(creerCarte));
   $("vide").hidden = resultats.length > 0;
   $("compteur").textContent = texteCompteur(resultats.length, livres.length);
+}
+
+// Toute modification des données passe par ici, puis on rafraîchit l'affichage
+function mettreAJour(nouveauxLivres) {
+  livres = nouveauxLivres;
+  afficher();
+}
+
+/* ---------- Actions ---------- */
+
+function basculerStatut(id) {
+  mettreAJour(livres.map((l) => (l.id === id ? { ...l, disponible: !l.disponible } : l)));
+}
+
+function supprimerLivre(id) {
+  const livre = livres.find((l) => l.id === id);
+  if (!confirm(`Supprimer « ${livre.titre} » du catalogue ?`)) return;
+  mettreAJour(livres.filter((l) => l.id !== id));
 }
 
 /* ---------- Initialisation ---------- */

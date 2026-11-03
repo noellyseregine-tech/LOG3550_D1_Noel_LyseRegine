@@ -6,6 +6,30 @@ function copieDepart() {
   return LIVRES_DEPART.map((livre) => ({ ...livre }));
 }
 
+/* ---------- Recherche, filtres et tri ---------- */
+
+// Retire les accents et la casse pour comparer des textes
+function normaliser(texte) {
+  return texte.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function comparer(a, b, champ) {
+  return champ === "annee" ? a.annee - b.annee : a.titre.localeCompare(b.titre, "fr");
+}
+
+function livresAffiches() {
+  const recherche = normaliser($("recherche").value.trim());
+  const categorie = $("filtre-categorie").value;
+  const dispoSeulement = $("dispo-seulement").checked;
+  const [champ, sens] = $("tri").value.split("-");
+
+  return livres
+    .filter((l) => !recherche || normaliser(`${l.titre} ${l.auteur}`).includes(recherche))
+    .filter((l) => !categorie || l.categorie === categorie)
+    .filter((l) => !dispoSeulement || l.disponible)
+    .sort((a, b) => (sens === "desc" ? -1 : 1) * comparer(a, b, champ));
+}
+
 /* ---------- Affichage ---------- */
 
 function creerCarte(livre) {
@@ -23,8 +47,31 @@ function creerCarte(livre) {
   return carte;
 }
 
-function afficher() {
-  $("grille").replaceChildren(...livres.map(creerCarte));
+function texteCompteur(nombre, total) {
+  return `${nombre} livre${nombre > 1 ? "s" : ""} affiché${nombre > 1 ? "s" : ""} sur ${total}`;
 }
 
-afficher();
+function afficher() {
+  const resultats = livresAffiches();
+  $("grille").replaceChildren(...resultats.map(creerCarte));
+  $("vide").hidden = resultats.length > 0;
+  $("compteur").textContent = texteCompteur(resultats.length, livres.length);
+}
+
+/* ---------- Initialisation ---------- */
+
+function remplirCategories() {
+  CATEGORIES.forEach((cat) => {
+    [$("filtre-categorie"), $("categorie")].forEach((liste) => liste.append(new Option(cat, cat)));
+  });
+}
+
+function init() {
+  remplirCategories();
+  ["recherche", "filtre-categorie", "tri", "dispo-seulement"].forEach((id) => {
+    $(id).addEventListener("input", afficher);
+  });
+  afficher();
+}
+
+init();

@@ -1,8 +1,8 @@
 # LOG3550 – Devoir 1 : Catalogue de bibliothèque (frontend)
 
-**Étudiant(e) :** Prénom Nom
+**Étudiant(e) :** Noel Lyse Régine
 **Cours :** LOG3550 Développement web – ISTEAH (prof. Samuel Jonathan Joseph)
-**Dépôt Git :** https://github.com/VOTRE-COMPTE/LOG3550-devoir1
+**Dépôt Git :** https://github.com/noellyseregine-tech/LOG3550_D1_Noel_LyseRegine
 
 ## Description
 
@@ -89,4 +89,4 @@ J'utilise aussi `map` pour transformer les livres en cartes, et `forEach` pour r
 - WebAIM Contrast Checker, pour vérifier les contrastes de la palette.
 - Police **Literata** (Google Fonts, licence SIL Open Font License), seule ressource externe autorisée.
 - Image : `img/logo.svg`, dessinée pour ce devoir (formes géométriques simples), libre de droits. Aucune autre image n'est utilisée.
-- Outil d'assistance IA : **Claude (Anthropic)**, utilisé pour générer et réviser le code, rédiger une partie de ce README et produire les captures avec un script de test automatisé (Selenium et Chrome sans interface). J'ai relu, testé et compris chaque partie du code, et je peux l'expliquer.
+- Outil d'assistance IA : **Claude (Anthropic)**, utilisé pour réviser le code et rédiger une partie de ce README. J'ai relu, testé et compris chaque partie du code, et je peux l'expliquer.

@@ -1,10 +1,34 @@
+const CLE_STOCKAGE = "bibliotheque-livres";
 const CHAMPS_FORMULAIRE = ["titre", "auteur", "annee", "categorie"];
 const $ = (id) => document.getElementById(id);
 
-let livres = copieDepart();
+let livres = chargerLivres();
+
+/* ---------- Persistance ---------- */
 
 function copieDepart() {
   return LIVRES_DEPART.map((livre) => ({ ...livre }));
+}
+
+function chargerLivres() {
+  try {
+    const donnees = JSON.parse(localStorage.getItem(CLE_STOCKAGE));
+    return Array.isArray(donnees) ? donnees : copieDepart();
+  } catch {
+    return copieDepart(); // stockage indisponible ou JSON corrompu
+  }
+}
+
+function sauvegarder() {
+  try {
+    localStorage.setItem(CLE_STOCKAGE, JSON.stringify(livres));
+  } catch {
+    // Quota dépassé ou navigation privée : l'application continue en mémoire
+  }
+}
+
+function estEtatDepart() {
+  return JSON.stringify(livres) === JSON.stringify(LIVRES_DEPART);
 }
 
 /* ---------- Recherche, filtres et tri ---------- */
@@ -64,11 +88,13 @@ function afficher() {
   $("grille").replaceChildren(...resultats.map(creerCarte));
   $("vide").hidden = resultats.length > 0;
   $("compteur").textContent = texteCompteur(resultats.length, livres.length);
+  $("reinitialiser").disabled = estEtatDepart();
 }
 
-// Toute modification des données passe par ici, puis on rafraîchit l'affichage
+// Toute modification des données passe par ici : sauvegarde puis rafraîchissement
 function mettreAJour(nouveauxLivres) {
   livres = nouveauxLivres;
+  sauvegarder();
   afficher();
 }
 
@@ -82,6 +108,11 @@ function supprimerLivre(id) {
   const livre = livres.find((l) => l.id === id);
   if (!confirm(`Supprimer « ${livre.titre} » du catalogue ?`)) return;
   mettreAJour(livres.filter((l) => l.id !== id));
+}
+
+function reinitialiser() {
+  if (!confirm("Remettre les données de départ ? Vos ajouts et suppressions seront perdus.")) return;
+  mettreAJour(copieDepart());
 }
 
 /* ---------- Formulaire ---------- */
@@ -149,6 +180,7 @@ function init() {
   ["recherche", "filtre-categorie", "tri", "dispo-seulement"].forEach((id) => {
     $(id).addEventListener("input", afficher);
   });
+  $("reinitialiser").addEventListener("click", reinitialiser);
   $("form-ajout").addEventListener("submit", ajouterLivre);
   afficher();
 }

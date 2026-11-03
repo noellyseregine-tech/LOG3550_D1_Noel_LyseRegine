@@ -46,6 +46,8 @@ header {
   gap: var(--esp-1);
 }
 header h1 { font-size: 1.5rem; }
+.marque { display: flex; align-items: center; gap: var(--esp-1); }
+.marque img { display: block; }
 nav { display: flex; gap: var(--esp-2); }
 nav a { color: var(--blanc); text-underline-offset: 4px; }
 
